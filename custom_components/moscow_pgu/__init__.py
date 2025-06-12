@@ -164,13 +164,11 @@ async def async_setup_entry(hass: HomeAssistantType, config_entry: ConfigEntry) 
     # Create holder for data updaters
     hass.data.setdefault(DATA_UPDATERS, {})[entry_id] = {}
 
-    for platform in SUPPORTED_PLATFORMS:
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(
-                config_entry,
-                platform,
-            )
-        )
+    await hass.config_entries.async_forward_entry_setups(
+        config_entry,
+        SUPPORTED_PLATFORMS,
+    )
+
 
     # Create update listener
     update_listener = config_entry.add_update_listener(async_reload_entry)
